@@ -3,10 +3,6 @@ if (!defined('TYPO3_MODE')) {
     die('Access denied.');
 }
 
-if (!defined('TYPO3_COMPOSER_MODE') || TYPO3_COMPOSER_MODE === false) {
-    require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('find') . '.Build/vendor/autoload.php');
-}
-
 \TYPO3\CMS\Extbase\Utility\ExtensionUtility::configurePlugin(
     'Subugoe.' . $_EXTKEY,
     'Find',

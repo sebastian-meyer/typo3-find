@@ -27,8 +27,7 @@ namespace Subugoe\Find\Utility;
  * ************************************************************* */
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Fluid\Core\ViewHelper\TagBuilder;
-
+use TYPO3Fluid\Fluid\Core\ViewHelper\TagBuilder;
 /**
  * Utility for JavaScripts, Views, ...
  */

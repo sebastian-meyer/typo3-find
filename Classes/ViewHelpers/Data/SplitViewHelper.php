@@ -29,13 +29,15 @@ namespace Subugoe\Find\ViewHelpers\Data;
 use TYPO3\CMS\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3\CMS\Fluid\Core\ViewHelper\Facets\CompilableInterface;
+use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
+use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperInterface;
 
 /**
  * View Helper to split a string into an array of strings at the given separator.
  *
  * Usage examples are available in Private/Partials/Test.html.
  */
-class SplitViewHelper extends AbstractViewHelper implements CompilableInterface
+class SplitViewHelper extends AbstractViewHelper implements ViewHelperInterface
 {
     /**
      * @param string $string The string to split into components
@@ -64,7 +66,7 @@ class SplitViewHelper extends AbstractViewHelper implements CompilableInterface
     public static function renderStatic(
         array $arguments,
         \Closure $renderChildrenClosure,
-        RenderingContextInterface $renderingContext
+        \TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface $renderingContext
     ) {
         $string = $arguments['string'];
         if ($string === null) {

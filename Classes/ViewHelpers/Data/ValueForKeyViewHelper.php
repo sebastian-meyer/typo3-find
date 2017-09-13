@@ -29,13 +29,14 @@ namespace Subugoe\Find\ViewHelpers\Data;
 use TYPO3\CMS\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3\CMS\Fluid\Core\ViewHelper\Facets\CompilableInterface;
+use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperInterface;
 
 /**
  * View Helper to return the value of a key in an array.
  *
  * Usage examples are available in Private/Partials/Test.html.
  */
-class ValueForKeyViewHelper extends AbstractViewHelper implements CompilableInterface
+class ValueForKeyViewHelper extends AbstractViewHelper implements ViewHelperInterface
 {
     /**
      * @param array $array The array to extract the value from
@@ -64,7 +65,7 @@ class ValueForKeyViewHelper extends AbstractViewHelper implements CompilableInte
     public static function renderStatic(
         array $arguments,
         \Closure $renderChildrenClosure,
-        RenderingContextInterface $renderingContext
+        \TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface $renderingContext
     ) {
         $result = null;
 

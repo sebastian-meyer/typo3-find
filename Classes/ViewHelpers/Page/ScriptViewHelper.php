@@ -25,16 +25,16 @@ namespace Subugoe\Find\ViewHelpers\Page;
 use TYPO3\CMS\Core\Page\PageRenderer;
 use TYPO3\CMS\Core\TypoScript\TemplateService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Fluid\Core\Rendering\RenderingContextInterface;
+use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper;
-use TYPO3\CMS\Fluid\Core\ViewHelper\Facets\CompilableInterface;
+use \TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperInterface;
 
 /**
  * View Helper to dynamically add script resources to the output.
  *
  * Usage examples are available in Private/Partials/Test.html.
  */
-class ScriptViewHelper extends AbstractViewHelper implements CompilableInterface
+class ScriptViewHelper extends AbstractViewHelper implements ViewHelperInterface
 {
     /**
      * @return PageRenderer
