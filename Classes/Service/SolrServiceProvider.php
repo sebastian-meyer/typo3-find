@@ -586,7 +586,7 @@ class SolrServiceProvider extends AbstractServiceProvider implements ServiceProv
                 ksort($queryTerms);
 
                 if ($this->settings['features']['eDisMax']) {
-                    $queryPart = '_query_:{!edismax}' . $this->query->getHelper()->escapePhrase(vsprintf($queryFormat,
+                    $queryPart = '_query_:' . $this->query->getHelper()->escapePhrase(vsprintf($queryFormat,
                             $queryTerms));
                     $queryPart = str_replace('"', '', $queryPart);
                 } else {
@@ -851,6 +851,7 @@ class SolrServiceProvider extends AbstractServiceProvider implements ServiceProv
         $this->query = $this->connection->createSelect();
         $this->addFeatures();
         $this->addTypoScriptFilters();
+        $this->addMainQueryOperator();
 
         $this->setConfigurationValue('solarium', $this->query);
     }
@@ -1179,5 +1180,16 @@ class SolrServiceProvider extends AbstractServiceProvider implements ServiceProv
             );
         }
         return $assignments;
+    }
+
+    /*
+     * Set configured main query operator. Defaults to 'AND'.
+     */
+    private function addMainQueryOperator() {
+        $mainQueryOperator = 'AND';
+        if (isset($this->settings['mainQueryOperator'])) {
+            $mainQueryOperator = $this->settings['mainQueryOperator'];
+        }
+        $this->query->setQueryDefaultOperator($mainQueryOperator);
     }
 }
