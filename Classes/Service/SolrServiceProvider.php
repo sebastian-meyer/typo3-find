@@ -272,16 +272,6 @@ class SolrServiceProvider extends AbstractServiceProvider implements ServiceProv
                                 );
                             }
                         }
-                    } elseif (array_key_exists('facettype', $facet)) {
-                        if ($facet['facettype'] == 'date_range') {
-                            if ($facet['start'] && $facet['end'] && $facet['gap']) {
-                                $queryForFacet = $facetSet->createFacetRange($facet['field'] ? $facetID : $facet['field']);
-                                $queryForFacet->setField($facet['field'] ? $facet['field'] : $facetID)
-                                    ->setStart($facet['start'])
-                                    ->setEnd($facet['end'])
-                                    ->setGap($facet['gap']);
-                            }
-                        }
                     } else {
                         $queryForFacet = $facetSet->createFacetField($facetID);
                         $queryForFacet->setField($facet['field'] ? $facet['field'] : $facetID)
@@ -586,7 +576,7 @@ class SolrServiceProvider extends AbstractServiceProvider implements ServiceProv
                 ksort($queryTerms);
 
                 if ($this->settings['features']['eDisMax']) {
-                    $queryPart = '_query_:' . $this->query->getHelper()->escapePhrase(vsprintf($queryFormat,
+                    $queryPart = $this->query->getHelper()->escapePhrase(vsprintf($queryFormat,
                             $queryTerms));
                     $queryPart = str_replace('"', '', $queryPart);
                 } else {
