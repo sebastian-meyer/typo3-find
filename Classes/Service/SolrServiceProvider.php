@@ -226,13 +226,20 @@ class SolrServiceProvider extends AbstractServiceProvider implements ServiceProv
                         $queryInfo['tag'] = $this->tagForFacet($facetID);
                     }
 
-                    $this->query->createFilterQuery($queryInfo)
-                        ->setQuery($facetQuery);
+                    // If facet.missing is active and facet is selected
+                    // set solr query to exclude all known facet values
+                    if ($facetTerm == $facetInfo['config']['labelmissing']) {
+                        $this->query->createFilterQuery($queryInfo)
+                            ->setQuery("-".str_replace('("%s")','[* TO *]', $facetInfo['config']['query']));
+                    } else {
+                        $this->query->createFilterQuery($queryInfo)
+                            ->setQuery($facetQuery);
+                    }
+
                 }
                 $activeFacetsForTemplate[$facetID][$facetTerm] = $facetInfo;
             }
         }
-
         return $activeFacetsForTemplate;
     }
 
@@ -282,6 +289,10 @@ class SolrServiceProvider extends AbstractServiceProvider implements ServiceProv
 
                     if ($facet['excludeOwnFilter'] == 1) {
                         $queryForFacet->addExclude($this->tagForFacet($facetID));
+                    }
+
+                    if ($facet['showmissing'] == 1) {
+                        $queryForFacet->setMissing(true);
                     }
                 } else {
                     LoggerUtility::logWarning(
