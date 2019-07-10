@@ -1,5 +1,4 @@
 <?php
-namespace Subugoe\Find\ViewHelpers\Find;
 
 /* * *************************************************************
  *  Copyright notice
@@ -27,56 +26,75 @@ namespace Subugoe\Find\ViewHelpers\Find;
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  * ************************************************************* */
-use TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper;
+
+namespace Subugoe\Find\ViewHelpers\Find;
+
+
 
 /**
  * Returns additional parameters needed to create links for facets.
  *
  * Arguments:
  *  - facetID: ID of the facet to create the link for
- *  - facetTerm: the value of the facet’s item in question [optional in remove mode]
+ *	- facetTerm: the value of the facet’s item in question [optional in remove mode]
  *  - activeFacets: the array of active facets
  *  - mode: return an array for
- *      - add: f.link.action’s »arguments«, adding a facet selection
- *       - remove: f.link.action’s »argumentsToBeExcludedFromQueryString«, removing a facet selection
- *              leaving out the facetTerm parameter removes all selected items for the facet facetID
+ *		- add: f.link.action’s »arguments«, adding a facet selection
+ * 		- remove: f.link.action’s »argumentsToBeExcludedFromQueryString«, removing a facet selection
+ *					leaving out the facetTerm parameter removes all selected items for the facet facetID
  */
-class FacetLinkArgumentsViewHelper extends AbstractViewHelper
-{
+class FacetLinkArgumentsViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper {
+
+    /**
+     * Register arguments.
+     */
+    public function initializeArguments() {
+        parent::initializeArguments();
+        $this->registerArgument('facetID', 'string', 'The name of the facet to create the link for', TRUE);
+        $this->registerArgument('facetTerm', 'string', 'Term of the facet item to create the link for', FALSE, '');
+        $this->registerArgument('activeFacets', 'array', 'Array of active facets', FALSE, Array());
+        $this->registerArgument('mode', 'string', 'One of »add« or »remove« depending on whether the result is used with »arguments« or with »argumentsToBeExcludedFromQueryString«', FALSE, 'add');
+        $this->registerArgument('not', 'boolean', 'Invert facet to not.', FALSE, '');
+        $this->registerArgument('modifier', 'string', 'Choose a modifier.', FALSE, '');
+    }
+
+
+
     /**
      * Create the return array required to add/remove the URL parameters by
      * passing it to f.link.action’s »arguments«
      * or »argumentsToBeExcludedFromQueryString«.
      *
-     * @param string $facetID The name of the facet to create the link for
-     * @param string $facetTerm Term of the facet item to create the link for
-     * @param array $activeFacets Array of active facets
-     * @param string $mode One of »add« or »remove« depending on whether the result is used with »arguments« or with »argumentsToBeExcludedFromQueryString«
      * @return array
      */
-    public function render($facetID, $facetTerm = '', $activeFacets = [], $mode = 'add')
-    {
-        $result = [];
+    public function render() {
+        $result = array();
+        $activeFacets = $this->arguments['activeFacets'];
 
-        if ($mode === 'remove' && $activeFacets) {
-            if (array_key_exists($facetID, $activeFacets)) {
-                $itemToRemove = 'tx_find_find[facet][' . $facetID . ']';
-
-                if (array_key_exists($facetTerm, $activeFacets[$facetID])) {
-                    $itemToRemove .= '[' . $facetTerm . ']';
+        if ($this->arguments['mode'] === 'remove' && $activeFacets) {
+            if (array_key_exists($this->arguments['facetID'], $activeFacets)) {
+                $itemToRemove = 'tx_find_find[facet][' . $this->arguments['facetID'] . ']';
+                if (array_key_exists($this->arguments['facetTerm'], $activeFacets[$this->arguments['facetID']])) {
+                    $itemToRemove .= '[' . $this->arguments['facetTerm'] . ']';
                 }
                 $result[] = $itemToRemove;
             }
             // Go back to page 1.
             $result[] = 'tx_find_find[page]';
-        } else {
-            if ($mode === 'add') {
-                $result['facet'] = [
-                    $facetID => [$facetTerm => 1]
-                ];
+        }
+        else if ($this->arguments['mode'] === 'add') {
+            $result['facet'] = array(
+                $this->arguments['facetID'] => array(str_replace('&', '%26', $this->arguments['facetTerm']) => 1)
+            );
+
+            if ($this->arguments['modifier']) {
+                $result['facet'][$this->arguments['facetID']][str_replace('&', '%26', $this->arguments['facetTerm'])] = $this->arguments['modifier'];
             }
+
         }
 
         return $result;
     }
 }
+
+?>

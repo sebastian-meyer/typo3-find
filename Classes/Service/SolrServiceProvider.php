@@ -206,6 +206,9 @@ class SolrServiceProvider extends AbstractServiceProvider implements ServiceProv
             $i = 0;
             foreach ($facets as $facetTerm => $facetInfo) {
                 $facetQuery = $this->getFacetQuery($this->getFacetConfig($facetID), $facetTerm);
+                if ($facetInfo['modifier'] == 'not') {
+                    $facetQuery = 'NOT '.$facetQuery;
+                }
 
                 // multi select facet
                 if ($facetInfo['config']['facettype'] == 'multi_select_facet') {
@@ -437,8 +440,11 @@ class SolrServiceProvider extends AbstractServiceProvider implements ServiceProv
                 'id' => $facetID,
                 'config' => $facetConfig,
                 'term' => $facetTerm,
-                'query' => $this->getFacetQuery($facetConfig, $facetTerm)
+                'query' => $this->getFacetQuery($facetConfig, $facetTerm),
             ];
+            if ($facetStatus == "not") {
+                $facetInfo['modifier'] = 'not';
+            }
             $facetQueries[$facetTerm] = $facetInfo;
         }
         if (count($facetQueries) > 0) {
