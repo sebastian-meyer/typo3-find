@@ -994,6 +994,7 @@ class SolrServiceProvider extends AbstractServiceProvider implements ServiceProv
     {
         $this->query->setStart($this->getOffset($arguments));
         $this->query->setRows($this->getCount($arguments));
+        $this->addResultCountOptionsToTemplate($arguments);
     }
 
     /**
