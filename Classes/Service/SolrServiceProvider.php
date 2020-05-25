@@ -243,6 +243,10 @@ class SolrServiceProvider extends AbstractServiceProvider implements ServiceProv
      */
     protected function addFacetQueries()
     {
+
+        $statsquery = clone $this->query;
+        $statsquery->setStart(0)->setRows(0);
+
         $facetConfiguration = $this->settings['facets'];
 
         if ($facetConfiguration) {
@@ -270,6 +274,63 @@ class SolrServiceProvider extends AbstractServiceProvider implements ServiceProv
                                         'facetConfiguration' => $facetConfiguration
                                     ]
                                 );
+                            }
+                        }
+                    } elseif (array_key_exists('facettype', $facet)) {
+                        if ($facet['facettype'] == 'date_range') {
+                            if ($facet['start'] && $facet['end'] && $facet['gap']) {
+
+                                try {
+                                    $stats = $statsquery->getStats();
+                                    $stats->createField('facet_time_stat');
+
+                                    $resultset = $this->connection->select($statsquery);
+
+                                    $statsResult = $resultset->getStats();
+                                    $minValue = $statsResult->getResult('facet_time_stat')->getMin();
+                                    #seems not be used
+                                    #$maxValue = $statsResult->getResult('facet_time_stat')->getMax();
+
+                                } catch (HttpException $exception) {
+                                    // preset to year 0, if stats query faild
+                                    $minValue = '0000-01-01';
+
+                                } catch (Exception $e) {
+                                    // preset to year 0, if stats query faild
+                                    $minValue = '0000-01-01';
+                                }
+
+                                $date = new \DateTime($minValue);
+                                //$maxDate = new \DateTime($maxValue);
+
+                                $nowDate = new \DateTime('now');
+
+                                $years = date_diff($date, $nowDate);
+
+                                if ($years->y < 50) {
+                                    $gap = 1;
+                                } else {
+                                    $gap = round($years->y / 50);
+                                }
+
+                                // calculate start date so the gap divide evenly
+                                $mod = $years->y % $gap;
+                                $adding = $gap - $mod;
+
+                                $startTimeYears = $years->y + $adding;
+
+                                $start = 'NOW/YEAR-'. $startTimeYears .'YEARS';
+
+                                $end = $nowDate
+                                    ->add(new \DateInterval('P1Y'))
+                                    ->format('Y-m-d\TH:i:s\Z');
+
+                                $queryForFacet = $facetSet->createFacetRange($facet['field'] ? $facetID : $facet['field']);
+                                $queryForFacet->setField($facet['field'] ? $facet['field'] : $facetID)
+                                    ->setGap('+'.$gap.'YEAR')
+                                    ->setStart($start)
+                                    ->setEnd($end);
+
                             }
                         }
                     } else {
