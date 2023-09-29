@@ -130,7 +130,7 @@ class SearchController extends ActionController
 
             // dataservice
             if ($defaultQuery['query']) {
-                $dataserviceFilterquery = $defaultQuery['query'];
+                $dataserviceFilterquery = $defaultQuery['query'] . ' AND ';
                 if (is_array($defaultQuery['fq'])) {
                     foreach ($defaultQuery['fq'] as $value) {
                         $dataserviceFilterquery .= $value->getOptions()['query'] . ' AND ';
