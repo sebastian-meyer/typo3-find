@@ -128,6 +128,22 @@ class SearchController extends ActionController
                 }
             }
 
+            // dataservice
+            if ($defaultQuery['query']) {
+                $dataserviceFilterquery = $defaultQuery['query'];
+                if (is_array($defaultQuery['fq'])) {
+                    foreach ($defaultQuery['fq'] as $value) {
+                        $dataserviceFilterquery .= $value->getOptions()['query'] . ' AND ';
+                    }
+                    $dataserviceFilterquery = trim($dataserviceFilterquery, ' AND ');
+                }
+                $dataservice = [
+                    'ds-query' => $dataserviceFilterquery
+                ];
+                $this->view->assignMultiple($dataservice);
+                unset($defaultQuery['query'], $defaultQuery['fq']);
+            }
+
             $viewValues = [
                 'arguments' => $this->searchProvider->getRequestArguments(),
                 'config' => $this->searchProvider->getConfiguration(),

@@ -116,6 +116,8 @@ class SolrServiceProvider extends AbstractServiceProvider
         return [
             'results' => $resultSet,
             'error' => $error,
+            'query' => $this->query->getOptions()['query'],
+            'fq' => $this->query->getFilterQueries()
         ];
     }
 
