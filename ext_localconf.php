@@ -1,12 +1,13 @@
 <?php
 
-use TYPO3\CMS\Extbase\Utility\ExtensionUtility;
 use Subugoe\Find\Controller\SearchController;
-use TYPO3\CMS\Core\Imaging\IconRegistry;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Imaging\IconProvider\FontawesomeIconProvider;
+use TYPO3\CMS\Core\Imaging\IconRegistry;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
-defined('TYPO3_MODE') || exit;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Utility\ExtensionUtility;
+
+defined('TYPO3') || exit;
 
 $autoexec = static function () {
     ExtensionUtility::configurePlugin(

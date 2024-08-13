@@ -48,8 +48,9 @@ class SearchControllerTest extends UnitTestCase
 
     /**
      * @test
+     * @doesNotPerformAssertions
      */
-    public function implementTests()
+    public function implementTests(): void
     {
         self::markTestIncomplete();
     }

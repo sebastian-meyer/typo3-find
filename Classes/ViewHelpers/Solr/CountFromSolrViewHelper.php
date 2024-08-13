@@ -22,10 +22,10 @@ namespace Subugoe\Find\ViewHelpers\Solr;
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-use Solarium\QueryType\Select\Query\Query;
 use Solarium\Client;
+use Solarium\QueryType\Select\Query\Query;
 use Solarium\QueryType\Select\Result\Result;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 
 /**

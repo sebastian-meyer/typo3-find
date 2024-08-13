@@ -44,7 +44,7 @@ class SplitViewHelperTest extends ViewHelperBaseTestcase
         parent::setUp();
 
         $this->fixture = $this->getMockBuilder(SplitViewHelper::class)
-            ->setMethods(['dummy'])
+            ->addMethods(['dummy'])
             ->getMock();
         $this->injectDependenciesIntoViewHelper($this->fixture);
     }
