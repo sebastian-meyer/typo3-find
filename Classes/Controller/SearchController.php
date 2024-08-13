@@ -28,7 +28,9 @@ namespace Subugoe\Find\Controller;
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  * ************************************************************* */
-
+use Psr\Log\LoggerInterface;
+use TYPO3\CMS\Extbase\Mvc\Exception\NoSuchArgumentException;
+use TYPO3\CMS\Extbase\Mvc\Exception\StopActionException;
 use Subugoe\Find\Service\ServiceProviderInterface;
 use Subugoe\Find\Utility\ArrayUtility;
 use Subugoe\Find\Utility\FrontendUtility;
@@ -43,7 +45,7 @@ class SearchController extends ActionController
 
     protected ?object $searchProvider = null;
 
-    private \Psr\Log\LoggerInterface $logger;
+    private LoggerInterface $logger;
 
     public function __construct(LogManagerInterface $logManager)
     {
@@ -51,8 +53,8 @@ class SearchController extends ActionController
     }
 
     /**
-     * @throws \TYPO3\CMS\Extbase\Mvc\Exception\NoSuchArgumentException
-     * @throws \TYPO3\CMS\Extbase\Mvc\Exception\StopActionException
+     * @throws NoSuchArgumentException
+     * @throws StopActionException
      */
     public function detailAction(string $id)
     {

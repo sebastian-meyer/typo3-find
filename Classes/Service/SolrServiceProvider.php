@@ -26,7 +26,8 @@ namespace Subugoe\Find\Service;
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  * ************************************************************* */
-
+use Solarium\Component\Highlighting\Field;
+use Solarium\QueryType\Select\Result\Result;
 use Solarium\Client;
 use Solarium\Core\Client\Adapter\Curl;
 use Solarium\Core\Client\Adapter\Http;
@@ -402,7 +403,7 @@ class SolrServiceProvider extends AbstractServiceProvider
     {
         $highlightConfig = SettingsUtility::getMergedSettings('highlight', $this->settings);
 
-        if ($highlightConfig && $highlightConfig['fields'] && count($highlightConfig['fields']) > 0) {
+        if ($highlightConfig && $highlightConfig['fields'] && $highlightConfig['fields'] !== []) {
             $highlight = $this->query->getHighlighting();
 
             // Configure highlight queries.
@@ -474,7 +475,7 @@ class SolrServiceProvider extends AbstractServiceProvider
             if ($highlightConfig['alternateFields']) {
                 foreach ($highlightConfig['alternateFields'] as $fieldName => $alternateFieldName) {
                     $highlightField = $highlight->getField($fieldName);
-                    if (null !== $highlightField) {
+                    if ($highlightField instanceof Field) {
                         $highlightField->setAlternateField($alternateFieldName);
                     }
                 }
@@ -580,7 +581,7 @@ class SolrServiceProvider extends AbstractServiceProvider
      */
     protected function addSortStringForQuery(string $sortString): void
     {
-        if (!empty($sortString)) {
+        if ($sortString !== '') {
             $sortCriteria = explode(',', $sortString);
             foreach ($sortCriteria as $sortCriterion) {
                 $sortCriterionParts = explode(' ', $sortCriterion);
@@ -875,7 +876,7 @@ class SolrServiceProvider extends AbstractServiceProvider
         $connection = $this->getConnection();
 
         try {
-            /** @var \Solarium\QueryType\Select\Result\Result $selectResults */
+            /** @var Result $selectResults */
             $selectResults = $connection->execute($this->query);
 
             if ($selectResults->getNumFound() > 0) {
@@ -932,7 +933,7 @@ class SolrServiceProvider extends AbstractServiceProvider
         $escapedID = $this->query->getHelper()->escapeTerm($id);
         $this->query->setQuery('id:'.$escapedID);
         try {
-            /** @var \Solarium\QueryType\Select\Result\Result $selectResults */
+            /** @var Result $selectResults */
             $selectResults = $connection->execute($this->query);
 
             if ($selectResults->getNumFound() > 0) {

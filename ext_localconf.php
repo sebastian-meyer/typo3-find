@@ -1,16 +1,22 @@
 <?php
 
+use TYPO3\CMS\Extbase\Utility\ExtensionUtility;
+use Subugoe\Find\Controller\SearchController;
+use TYPO3\CMS\Core\Imaging\IconRegistry;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Imaging\IconProvider\FontawesomeIconProvider;
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 defined('TYPO3_MODE') || exit;
 
 $autoexec = static function () {
-    \TYPO3\CMS\Extbase\Utility\ExtensionUtility::configurePlugin(
+    ExtensionUtility::configurePlugin(
         'Find',
         'Find',
         [
-            \Subugoe\Find\Controller\SearchController::class => 'index, detail, suggest',
+            SearchController::class => 'index, detail, suggest',
         ],
         [
-            \Subugoe\Find\Controller\SearchController::class => 'index, detail, suggest',
+            SearchController::class => 'index, detail, suggest',
         ]
     );
 
@@ -18,16 +24,16 @@ $autoexec = static function () {
         /*
          * Register icons
          */
-        /** @var \TYPO3\CMS\Core\Imaging\IconRegistry $iconRegistry */
-        $iconRegistry = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Core\Imaging\IconRegistry::class);
+        /** @var IconRegistry $iconRegistry */
+        $iconRegistry = GeneralUtility::makeInstance(IconRegistry::class);
         $iconRegistry->registerIcon(
             'ext-find-ce-wizard',
-            \TYPO3\CMS\Core\Imaging\IconProvider\FontawesomeIconProvider::class,
+            FontawesomeIconProvider::class,
             ['name' => 'search']
         );
     }
 
-    \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addPageTSConfig('<INCLUDE_TYPOSCRIPT: source="FILE:EXT:find/Configuration/TSconfig/ContentElementWizard.tsconfig">');
+    ExtensionManagementUtility::addPageTSConfig('<INCLUDE_TYPOSCRIPT: source="FILE:EXT:find/Configuration/TSconfig/ContentElementWizard.tsconfig">');
 };
 $autoexec();
 unset($autoexec);

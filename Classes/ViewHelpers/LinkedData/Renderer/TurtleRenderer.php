@@ -37,7 +37,7 @@ class TurtleRenderer extends AbstractRenderer implements RendererInterface
      *
      * @return string
      */
-    public function renderItems($items)
+    public function renderItems($items): string
     {
         $result = '';
 

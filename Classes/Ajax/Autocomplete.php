@@ -105,7 +105,7 @@ class Autocomplete implements MiddlewareInterface
                 foreach ($json['suggest'][$solrEntityDictionary][$query]['suggestions'] as $suggestion) {
                     list($id, $normalized) = explode('␝', $suggestion['payload']);
                     if (!in_array($id, $idDeduping)) {
-                        if (empty($normalized)) {
+                        if ($normalized === '') {
                             $normalized = $suggestion['term'];
                         }
 
@@ -122,7 +122,7 @@ class Autocomplete implements MiddlewareInterface
         }
 
         // Return results
-        if (!empty($suggests)) {
+        if ($suggests !== []) {
             // Return result
             return new JsonResponse($suggests);
         }
