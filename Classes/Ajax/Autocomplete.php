@@ -32,7 +32,7 @@ class Autocomplete implements MiddlewareInterface
         $solrEntityDictionary = 'entitySuggester';
 
         // Entity replacement
-//        $entityReplacement = '(entity_ids:%s OR entity_ids_from:%s OR entity_ids_to:%s)';
+        // $entityReplacement = '(entity_ids:%s OR entity_ids_from:%s OR entity_ids_to:%s)';
         if (isset($request->getQueryParams()['replacement'])) {
             $entityReplacement = $request->getQueryParams()['replacement'];
         } else {
